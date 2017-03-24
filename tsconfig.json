@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "strictNullChecks": true,
+        "rootDir": "./src",
+        "outDir": "./lib",
+        "lib": [
+            "es2015",
+            "es2015.promise",
+            "es2017",
+            "dom"
+        ],
+        "sourceMap": true
+    }
+}
