@@ -1,6 +1,6 @@
 # eis-thinking
 
-[![Build Status](https://travis-ci.org/FiveLoadWheels/eis-thinking.svg?branch=master)](https://travis-ci.org/FiveLoadWheels/eis-thinking)
+[![Build Status](https://img.shields.io/travis/FiveLoadWheels/eis-thinking/master.svg?style=flat-square)](https://travis-ci.org/FiveLoadWheels/eis-thinking)
 
 ## Install & Test
 
