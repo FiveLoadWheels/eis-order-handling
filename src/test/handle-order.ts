@@ -1,5 +1,5 @@
 import { handleOrder } from '../handle-order';
-import { Order, OrderType, OrderStatus, ProductType } from '../datatypes';
+import { Order, OrderType, OrderStatus, ProductType, ProductStatus } from '../datatypes';
 import { expect } from 'chai';
 import {  } from 'mocha';
 import { install as installSourceMap } from 'source-map-support';
@@ -18,11 +18,10 @@ function createOrder() {
         },
         product: {
             id: 'pid',
-            type: ProductType.Normal
+            type: ProductType.Normal,
+            status: ProductStatus.Ready
         },
-        requirement: {
-            components: []
-        },
+        requirement: [],
         logistics: {
             id: 'lid',
             mtime: Date.now(),
@@ -37,7 +36,7 @@ function createOrder() {
 }
 
 
-describe('OrderHandler(Basic lifecycle)', () => {
+describe('OrderHandler(Basic lifecycle with inventory)', () => {
     let order = createOrder();
     
     it('should not change the order if no external factor was changed', async () => {
@@ -48,36 +47,28 @@ describe('OrderHandler(Basic lifecycle)', () => {
         expect(order.status).to.equal(OrderStatus.Created);
     });
     
-    it('should state the order as `CustomerAcknowledged` after customer confirm it', async () => {
+    it('should state the order as `ProcessFinished` after customer confirm it, if inventory exists', async () => {
         await handleOrder(order, {
             type: 'CUSTOMER_ACK',
             payload: { resolved: true }
         });
-        expect(order.status).to.equal(OrderStatus.CustomerAcknowledged);
-    });
-        
-    it('should state the order as `ProcessStarted` after certain personnel accepted it', async () => {
-        await handleOrder(order, {
-            type: 'PROC_UPDATE',
-            payload: { success: false }
-        });
-        expect(order.status).to.equal(OrderStatus.ProcessStarted);
+        expect(order.status).to.equal(OrderStatus.ProcessFinished);
     });
     
-    it('should state the order as `Finished` after finished successfully', async () => {
+    it('should state the order as `DeliveryStarted` after logistics process started', async () => {
         await handleOrder(order, {
-            type: 'PROC_UPDATE',
-            payload: { success: true }
+            type: 'START_DELIVERY',
+            payload: { resolved: true }
         });
-        expect(order.status).to.equal(OrderStatus.DeliveryFinished);
+        expect(order.status).to.equal(OrderStatus.DeliveryStarted);
     });
         
-    it('should state the order as `Closed` after customer confirm the product and give feedback, etc.', async () => {
+    it('should state the order as `DeliveryFinished` after customer confirm the product and give feedback, etc.', async () => {
         await handleOrder(order, {
             type: 'ORDER_CONFIRM',
             payload: { resolved: true, arriveTime: Date.now() }
         });
-        expect(order.status).to.equal(OrderStatus.Closed);
+        expect(order.status).to.equal(OrderStatus.DeliveryFinished);
     });
 });
 
