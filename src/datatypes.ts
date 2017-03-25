@@ -27,7 +27,7 @@ export interface Order extends Identified, TimeTraced {
     status: OrderStatus;
     // events: OrderEvent[];
     customer: Customer;
-    requirement: ProductRequirement;
+    requirement: ProductRequirement[];
     product: Product;
     logistics: Logistics;
 }
@@ -63,17 +63,22 @@ export interface Component extends Identified {
 
 }
 
-export interface ProductRequirement {
-    components: Component[];
-
-}
+export type ProductRequirement = string;
 
 export interface Product extends Identified {
     type: ProductType;
+    status: ProductStatus
 }
 
 export enum ProductType {
     Normal
+}
+
+export enum ProductStatus {
+    Initialized = 1, // 已根据订单生成记录
+    ComponentEnsured, // 已保障零部件存货足够
+    AssemblyCompleted, // 已完成组装
+    Ready // also CheckCompleted，已完成质量检查，已完成生产
 }
 
 export interface InventoryRecord {

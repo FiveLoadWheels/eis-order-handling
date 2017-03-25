@@ -1,15 +1,18 @@
 // import { handleAction, Action } from './handler-util';
 import { merge } from 'lodash';
-import { Order, OrderStatus, Logistics } from './datatypes';
-import  * as orderStatusQueryActions from './order';
+import { Order, OrderStatus, Logistics, ProductStatus } from './datatypes';
+// import  * as orderStatusQueryActions from './order';
 
-type OrderAction = 
+import { ProductAction, handleProduct } from './handle-product';
+
+export type OrderAction = 
     { type: 'CANCEL_ORDER', payload: {} } |
     { type: 'MODIFY_ORDER', payload: Order | object } |
     { type: 'CUSTOMER_ACK', payload: { resolved: boolean } } |
     { type: 'PROC_UPDATE', payload: { success: boolean } } |
     { type: 'START_DELIVERY', payload: { resolved: boolean } } |
-    { type: 'ORDER_CONFIRM', payload: { resolved: boolean, arriveTime: number } }
+    { type: 'ORDER_CONFIRM', payload: { resolved: boolean, arriveTime: number } } |
+    ProductAction
 
 export function handleOrder(order: Order, action: OrderAction): Order {
     // handle cancelling
@@ -44,30 +47,25 @@ export function handleOrder(order: Order, action: OrderAction): Order {
         if (action.type === 'CUSTOMER_ACK')  {
             if (action.payload.resolved) {
                 order.status = OrderStatus.CustomerAcknowledged;
+                if (order.product.status === ProductStatus.Ready) {
+                    // If we have inventories, we can directly skip the manufacturing process.
+                    order.status = OrderStatus.ProcessFinished;
+                }
             }
         };
     break;
 
-    case OrderStatus.CustomerAcknowledged: {
-        // If we have inventories, we can directly skip the manufacturing process.
-        if (order.product && order.product.status === ProductStatus.Ready) {
-            order.status = OrderStatus.ProcessFinished;
-        }
-        else if (action.type === 'PROC_UPDATE') {
-            let process = action.payload;
-            if (process) {
-                order.status = OrderStatus.ProcessStarted;
-            }
+    case OrderStatus.CustomerAcknowledged: { 
+        handleProduct(order.product, action as ProductAction);
+        if (order.product.status > ProductStatus.Initialized) {
+            order.status = OrderStatus.ProcessStarted;
         }
     } break;
 
     case OrderStatus.ProcessStarted: {
-        if (action.type === 'PROC_UPDATE') {
-            let processAction = action.payload;
-            handleProduct(order.product, processAction);
-            if (order.product && order.product.status === ProductStatus.Ready) {
-                order.status = OrderStatus.ProcessFinished;
-            }
+        handleProduct(order.product, action as ProductAction);
+        if (order.product.status === ProductStatus.Ready) {
+            order.status = OrderStatus.ProcessFinished;
         }
     } break;
 

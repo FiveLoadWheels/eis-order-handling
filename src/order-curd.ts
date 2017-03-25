@@ -38,10 +38,10 @@ export function order() {
             payload: { resolved: true }
         }), { where: { id: order.id } });
         if (order.status === OrderStatus.CustomerAcknowledged) {
-            notifyProductionDeptToAccept(order);
+            // notifyProductionDeptToAccept(order);
         }
         else if (order.status === OrderStatus.ProcessFinished) {
-            notifyDeliveryDeptToProc(order);
+            // notifyDeliveryDeptToProc(order);
         }
         res.json({ error: null });
     });
@@ -51,13 +51,13 @@ export function order() {
         if (!order) {
             return res.json({ error: 'Order not found.' });
         }
-        await Order.update(await handleOrder(order, {
-            type: 'PROC_UPDATE',
-            payload: {
-                type: 'INIT_PRODUCT',
-                payload: res.body
-            }
-        }), { where: { id: order.id } });
+        // await Order.update(await handleOrder(order, {
+        //     type: 'PROC_UPDATE',
+        //     payload: {
+        //         type: 'INIT_PRODUCT',
+        //         payload: res.body
+        //     }
+        // }), { where: { id: order.id } });
         res.json({ error: null });
     });
 
