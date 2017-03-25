@@ -8,13 +8,19 @@ export function order() {
 
     router.put('/new', async (req, res) => {
         let order: IOrder | null = JSON.parse(req.body);
+        if (!order) {
+            return res.json({ error: 'Order not found.' });
+        }
         // await handleOrder(order);
         await Order.create(order);
         res.json({ error: null });
     });
 
     router.post('/update/:id', async (req, res) => {
-        let order: IOrder | null = await Order.find(req.params.id);
+        let order: IOrder | null = await Order.findOne(req.params.id);
+        if (!order) {
+            return res.json({ error: 'Order not found.' });
+        }
         await Order.update(await handleOrder(order, {
             type: 'MODIFY_ORDER_INFO',
             payload: JSON.parse(req.body)
@@ -24,6 +30,9 @@ export function order() {
 
     router.post('/customer-confirm/:id', async (req, res) => {
         let order: IOrder | null = await Order.findOne(req.params.id);
+        if (!order) {
+            return res.json({ error: 'Order not found.' });
+        }
         await Order.update(await handleOrder(order, {
             type: 'CUSTOMER_ACK',
             payload: { resolved: true }
@@ -39,6 +48,9 @@ export function order() {
 
     router.post('/processOrder/:id', async (req, res) => {
         let order: IOrder | null = await Order.find(req.params.id);
+        if (!order) {
+            return res.json({ error: 'Order not found.' });
+        }
         await Order.update(await handleOrder(order, {
             type: 'PROC_UPDATE',
             payload: {
@@ -51,6 +63,9 @@ export function order() {
 
     router.post('/startDelivery/:id', async (req, res) => {
         let order: IOrder | null = await Order.find(req.params.id);
+        if (!order) {
+            return res.json({ error: 'Order not found.' });
+        }
         await Order.update(await handleOrder(order, {
             type: 'START_DELIVERY',
             payload: { resolved: true }
@@ -60,6 +75,9 @@ export function order() {
 
     router.post('/finDelivery/:id', async (req, res) => {
         let order: IOrder | null = await Order.find(req.params.id);
+        if (!order) {
+            return res.json({ error: 'Order not found.' });
+        }
         await Order.update(await handleOrder(order, {
             type: 'ORDER_CONFIRM',
             payload: { resolved: true, arriveTime: Date.now() }
