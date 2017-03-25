@@ -19,8 +19,7 @@ function createOrder() {
         product: {
             id: 'pid',
             type: ProductType.Normal
-        }
-        ,
+        },
         requirement: {
             components: []
         },
@@ -76,10 +75,47 @@ describe('OrderHandler(Basic lifecycle)', () => {
     it('should state the order as `Closed` after customer confirm the product and give feedback, etc.', async () => {
         await handleOrder(order, {
             type: 'ORDER_CONFIRM',
-            payload: { resolved: true }
+            payload: { resolved: true, arriveTime: Date.now() }
         });
         expect(order.status).to.equal(OrderStatus.Closed);
     });
+});
+
+describe('OrderHandler(Modifying)', () => {
+    let order = createOrder();
+    it('should modify the order when the customer wants to modify information', async () => {
+        await handleOrder(order, {
+            type: 'MODIFY_ORDER',
+            payload: {
+                logistics: {
+                    toLoc: 'A new location, Hong Kong SAR'
+                }
+            }
+        });
+        expect(order.logistics.toLoc).to.equal('A new location, Hong Kong SAR');
+    });
+
+    it('should not modify the order after the customer has comfirmed it', async () => {
+        await handleOrder(order, {
+            type: 'CUSTOMER_ACK',
+            payload: { resolved: true }
+        });
+        try {
+            await handleOrder(order, {
+                type: 'MODIFY_ORDER',
+                payload: {
+                    logistics: {
+                        toLoc: 'Another location, Hong Kong SAR'
+                    }
+                }
+            })
+        }
+        catch (e) {
+            expect(e).to.be.instanceOf(Error, 'Expect throws an error');
+            expect(e.message).to.equal('Cannot modify customer-acknowledged order');
+        }
+        expect(order.logistics.toLoc).to.equal('A new location, Hong Kong SAR');
+    })
 });
 
 describe('OrderHandler(Cancelling)', () => {

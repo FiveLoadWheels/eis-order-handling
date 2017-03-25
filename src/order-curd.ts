@@ -22,7 +22,7 @@ export function order() {
             return res.json({ error: 'Order not found.' });
         }
         await Order.update(await handleOrder(order, {
-            type: 'MODIFY_ORDER_INFO',
+            type: 'MODIFY_ORDER',
             payload: JSON.parse(req.body)
         }), { where: { id: order.id } });
         res.json({ error: null });

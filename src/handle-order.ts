@@ -1,10 +1,11 @@
 // import { handleAction, Action } from './handler-util';
+import { merge } from 'lodash';
 import { Order, OrderStatus, Logistics } from './datatypes';
-
 import  * as orderStatusQueryActions from './order';
 
 type OrderAction = 
     { type: 'CANCEL_ORDER', payload: {} } |
+    { type: 'MODIFY_ORDER', payload: Order | object } |
     { type: 'CUSTOMER_ACK', payload: { resolved: boolean } } |
     { type: 'PROC_UPDATE', payload: { success: boolean } } |
     { type: 'START_DELIVERY', payload: { resolved: boolean } } |
@@ -22,6 +23,18 @@ export function handleOrder(order: Order, action: OrderAction): Order {
         }
     }
 
+    // handle modifying
+    if (action.type === 'MODIFY_ORDER') {
+        if (order.status >= OrderStatus.CustomerAcknowledged) {
+            throw new Error('Cannot modify customer-acknowledged order');
+        }
+        else {
+            merge(order, action.payload);
+            return order;
+        }
+    }
+
+    // basic lifecycle
     switch (order.status) {
     case OrderStatus.Cancelled:
         // ...
