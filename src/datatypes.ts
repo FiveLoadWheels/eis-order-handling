@@ -28,7 +28,7 @@ export interface Order extends Identified, TimeTraced {
     // events: OrderEvent[];
     customer: Customer;
     requirement: ProductRequirement[];
-    product: Product;
+    products: EndProduct[];
     logistics: Logistics;
 }
 
@@ -65,9 +65,9 @@ export interface Component extends Identified {
 
 export type ProductRequirement = string;
 
-export interface Product extends Identified {
-    type: ProductType;
-    status: ProductStatus
+export interface EndProduct extends Identified {
+    serial_number: string;
+    status: ProductStatus;
 }
 
 export enum ProductType {
