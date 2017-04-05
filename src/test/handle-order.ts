@@ -16,11 +16,13 @@ function createOrder() {
         customer: {
             id: 'uid',
         },
-        product: {
-            id: 'pid',
-            type: ProductType.Normal,
-            status: ProductStatus.Ready
-        },
+        products: [
+            {
+                id: 'pid',
+                serial_number: '0x000fffabcde',
+                status: ProductStatus.Initialized
+            }
+        ],
         requirement: [],
         logistics: {
             id: 'lid',
@@ -36,8 +38,67 @@ function createOrder() {
 }
 
 
-describe('OrderHandler(Basic lifecycle with inventory)', () => {
+describe('OrderHandler(Basic lifecycle)', () => {
     let order = createOrder();
+    
+    it('should not change the order if no external factor was changed', async () => {
+        await handleOrder(order, {
+            type: 'CUSTOMER_ACK',
+            payload: { resolved: false }
+        });
+        expect(order.status).to.equal(OrderStatus.Created);
+    });
+    
+    it('should state the order as `CustomerAcknowledged` after customer confirm it', async () => {
+        await handleOrder(order, {
+            type: 'CUSTOMER_ACK',
+            payload: { resolved: true }
+        });
+        expect(order.status).to.equal(OrderStatus.CustomerAcknowledged);
+    });
+    
+    it('should state the order as `ProcessStarted` after SOME order(s) being accepted by certain personnels', async () => {
+        // do something should be done by handleProduct(product, action)
+        order.products[0].status = ProductStatus.ComponentEnsured;
+        await handleOrder(order, {
+            type: 'UPDATE_PRODUCT_PROCESS',
+            payload: null
+        });
+        expect(order.status).to.equal(OrderStatus.ProcessStarted);
+    });
+
+    it('should state the order as `ProcessFinished` after ALL orders being ready for delivering', async () => {
+        // do something should be done by handleProduct(product, action)
+        order.products[0].status = ProductStatus.Ready;
+        await handleOrder(order, {
+            type: 'UPDATE_PRODUCT_PROCESS',
+            payload: null
+        });
+        expect(order.status).to.equal(OrderStatus.ProcessFinished);
+    });
+
+    it('should state the order as `DeliveryStarted` after logistics process started', async () => {
+        await handleOrder(order, {
+            type: 'START_DELIVERY',
+            payload: { resolved: true }
+        });
+        expect(order.status).to.equal(OrderStatus.DeliveryStarted);
+    });
+        
+    it('should state the order as `DeliveryFinished` after customer confirm the product and give feedback, etc.', async () => {
+        await handleOrder(order, {
+            type: 'ORDER_CONFIRM',
+            payload: { resolved: true, arriveTime: Date.now() }
+        });
+        expect(order.status).to.equal(OrderStatus.DeliveryFinished);
+    });
+});
+
+
+describe('OrderHandler(Basic lifecycle, if inventory exists)', () => {
+    let order = createOrder();
+    // state all products as `Ready` in case inventory exists for all products
+    order.products[0].status = ProductStatus.Ready;
     
     it('should not change the order if no external factor was changed', async () => {
         await handleOrder(order, {
