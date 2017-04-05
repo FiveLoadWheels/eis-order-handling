@@ -9,10 +9,9 @@ export type OrderAction =
     { type: 'CANCEL_ORDER', payload: {} } |
     { type: 'MODIFY_ORDER', payload: Order | object } |
     { type: 'CUSTOMER_ACK', payload: { resolved: boolean } } |
-    { type: 'PROC_UPDATE', payload: { success: boolean } } |
+    { type: 'UPDATE_PRODUCT_PROCESS', payload: { success: boolean } } |
     { type: 'START_DELIVERY', payload: { resolved: boolean } } |
-    { type: 'ORDER_CONFIRM', payload: { resolved: boolean, arriveTime: number } } |
-    ProductAction
+    { type: 'ORDER_CONFIRM', payload: { resolved: boolean, arriveTime: number } };
 
 export function handleOrder(order: Order, action: OrderAction): Order {
     // handle cancelling
@@ -56,15 +55,13 @@ export function handleOrder(order: Order, action: OrderAction): Order {
     break;
 
     case OrderStatus.CustomerAcknowledged: { 
-        handleProduct(order.product, action as ProductAction);
-        if (order.product.status > ProductStatus.Initialized) {
+        if (action.type === 'UPDATE_PRODUCT_PROCESS' && order.product.status > ProductStatus.Initialized) {
             order.status = OrderStatus.ProcessStarted;
         }
     } break;
 
     case OrderStatus.ProcessStarted: {
-        handleProduct(order.product, action as ProductAction);
-        if (order.product.status === ProductStatus.Ready) {
+        if (action.type === 'UPDATE_PRODUCT_PROCESS' && order.product.status === ProductStatus.Ready) {
             order.status = OrderStatus.ProcessFinished;
         }
     } break;
