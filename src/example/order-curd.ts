@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Order as IOrder, OrderStatus } from '../datatypes';
+import { IOrder as IOrder, OrderStatus } from '../datatypes';
 import { handleOrder } from '../handle-order';
 import { Order } from '../orm';
 

@@ -22,7 +22,7 @@ export interface Personnel extends Human {
 
 }
 
-export interface Order extends Identified, TimeTraced {
+export interface IOrder extends Identified, TimeTraced {
     type: OrderType;
     status: OrderStatus;
     // events: OrderEvent[];

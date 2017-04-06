@@ -1,19 +1,19 @@
 // import { handleAction, Action } from './handler-util';
 import { merge } from 'lodash';
-import { Order, OrderStatus, Logistics, ProductStatus } from './datatypes';
+import { IOrder, OrderStatus, Logistics, ProductStatus } from './datatypes';
 // import  * as orderStatusQueryActions from './order';
 
 import { ProductAction, handleProduct } from './handle-product';
 
 export type OrderAction = 
     { type: 'CANCEL_ORDER', payload: {} } |
-    { type: 'MODIFY_ORDER', payload: Order | object } |
+    { type: 'MODIFY_ORDER', payload: IOrder | object } |
     { type: 'CUSTOMER_ACK', payload: { resolved: boolean } } |
     { type: 'UPDATE_PRODUCT_PROCESS', payload: null } |
     { type: 'START_DELIVERY', payload: { resolved: boolean } } |
     { type: 'ORDER_CONFIRM', payload: { resolved: boolean, arriveTime: number } };
 
-export function handleOrder(order: Order, action: OrderAction): Order {
+export function handleOrder(order: IOrder, action: OrderAction): IOrder {
     // handle cancelling
     if (action.type === 'CANCEL_ORDER') {
         if (order.status >= OrderStatus.CustomerAcknowledged) {

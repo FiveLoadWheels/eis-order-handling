@@ -1,5 +1,5 @@
 import { handleOrder } from '../handle-order';
-import { Order, OrderType, OrderStatus, ProductType, ProductStatus } from '../datatypes';
+import { IOrder, OrderType, OrderStatus, ProductType, ProductStatus } from '../datatypes';
 import { expect } from 'chai';
 import {  } from 'mocha';
 import { install as installSourceMap } from 'source-map-support';
@@ -7,7 +7,7 @@ installSourceMap();
 // import { assert } from 'util';
 
 function createOrder() {
-    let orderProto: Order = {
+    let orderProto: IOrder = {
         id: '<uuid>',
         ctime: Date.now(),
         mtime: Date.now(),
