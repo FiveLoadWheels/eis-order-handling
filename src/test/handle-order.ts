@@ -88,7 +88,7 @@ describe('OrderHandler(Basic lifecycle)', () => {
     it('should state the order as `DeliveryFinished` after customer confirm the product and give feedback, etc.', async () => {
         await handleOrder(order, {
             type: 'ORDER_CONFIRM',
-            payload: { resolved: true, arriveTime: Date.now() }
+            payload: { arriveTime: Date.now() }
         });
         expect(order.status).to.equal(OrderStatus.DeliveryFinished);
     });
