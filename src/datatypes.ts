@@ -54,8 +54,12 @@ export interface Logistics extends Identified, TimeTraced {
     arriveTime?: number;
 }
 
-export interface Component extends Identified {
-
+export interface Accessory extends Identified {
+    modelName: string;
+    purchasePrice: number;
+    quantity: number;
+    type: string;
+    supplierId: number;
 }
 
 export type ProductRequirement = string;
@@ -72,6 +76,12 @@ export enum ProductStatus {
     ComponentEnsured, // 已保障零部件存货足够
     AssemblyCompleted, // 已完成组装
     Ready // also CheckCompleted，已完成质量检查，已完成生产
+}
+
+export interface ProductModels extends Identified {
+    modelName: string;
+    primaryPrice: number;
+    screenSize: number;
 }
 
 export interface InventoryRecord {
