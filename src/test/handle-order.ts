@@ -1,5 +1,5 @@
 import { handleOrder } from '../handle-order';
-import { IOrder, OrderStatus, ProductStatus } from '../datatypes';
+import { IOrder, OrderStatus, ProductStatus, Product } from '../datatypes';
 import { expect } from 'chai';
 import {  } from 'mocha';
 import { install as installSourceMap } from 'source-map-support';
@@ -8,24 +8,34 @@ installSourceMap();
 
 function createOrder() {
     let orderProto: IOrder = {
-        id: '<uuid>',
+        id: 12,
         ctime: Date.now(),
         mtime: Date.now(),
         status: OrderStatus.Created,
         customer: {
-            id: 'uid',
+            id: 22,
         },
         products: [],
         arriveTime: undefined,
         address: 'Somewhere'
     };
 
-    let product0 = {
-        id: 'pid',
+    let product0: Product = {
+        id: 92,
         serialNumber: '0x000fffabcde',
         status: ProductStatus.Initialized,
         modelId: 0,
-        order: orderProto
+        oid: 12,
+        accessories: [
+            {
+                id: 1,
+                modelName: 'Kingston 8G',
+                supplierId: 12, // Kingston
+                type: 'Memory',
+                purchasePrice: 120.0,
+                quantity: 99
+            }
+        ]
     };
 
     orderProto.products.push(product0);

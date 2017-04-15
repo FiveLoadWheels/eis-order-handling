@@ -1,6 +1,6 @@
 
 export interface Identified {
-    id: string;
+    id: number;
 }
 
 export interface TimeTraced {
@@ -66,9 +66,10 @@ export type ProductRequirement = string;
 
 export interface Product extends Identified {
     serialNumber: string;
-    order: IOrder;
+    oid: number;
     modelId: number;
     status: ProductStatus;
+    accessories: Accessory[];
 }
 
 export enum ProductStatus {
