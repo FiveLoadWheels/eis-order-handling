@@ -76,7 +76,7 @@ export function handleOrder(order: IOrder, action: OrderAction): IOrder {
 
     case OrderStatus.DeliveryStarted:
         if (action.type === 'ORDER_CONFIRM' && action.payload.arriveTime) {
-            order.logistics.arriveTime = action.payload.arriveTime
+            order.arriveTime = action.payload.arriveTime;
             order.status = OrderStatus.DeliveryFinished;
         }
     break;

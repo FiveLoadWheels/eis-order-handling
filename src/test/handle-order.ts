@@ -1,5 +1,5 @@
 import { handleOrder } from '../handle-order';
-import { IOrder, OrderType, OrderStatus, ProductType, ProductStatus } from '../datatypes';
+import { IOrder, OrderStatus, ProductStatus } from '../datatypes';
 import { expect } from 'chai';
 import {  } from 'mocha';
 import { install as installSourceMap } from 'source-map-support';
@@ -11,28 +11,24 @@ function createOrder() {
         id: '<uuid>',
         ctime: Date.now(),
         mtime: Date.now(),
-        type: OrderType.Normal,
         status: OrderStatus.Created,
         customer: {
             id: 'uid',
         },
-        products: [
-            {
-                id: 'pid',
-                serial_number: '0x000fffabcde',
-                status: ProductStatus.Initialized
-            }
-        ],
-        requirement: [],
-        logistics: {
-            id: 'lid',
-            mtime: Date.now(),
-            ctime: Date.now(),
-            fromLoc: '',
-            toLoc: '',
-            arriveTime: undefined
-        }
+        products: [],
+        arriveTime: undefined,
+        address: 'Somewhere'
     };
+
+    let product0 = {
+        id: 'pid',
+        serialNumber: '0x000fffabcde',
+        status: ProductStatus.Initialized,
+        modelId: 0,
+        order: orderProto
+    };
+
+    orderProto.products.push(product0);
 
     return orderProto;
 }
@@ -139,12 +135,10 @@ describe('OrderHandler(Modifying)', () => {
         await handleOrder(order, {
             type: 'MODIFY_ORDER',
             payload: {
-                logistics: {
-                    toLoc: 'A new location, Hong Kong SAR'
-                }
+                address: 'A new location, Hong Kong SAR'
             }
         });
-        expect(order.logistics.toLoc).to.equal('A new location, Hong Kong SAR');
+        expect(order.address).to.equal('A new location, Hong Kong SAR');
     });
 
     it('should not modify the order after the customer has comfirmed it', async () => {
@@ -156,9 +150,7 @@ describe('OrderHandler(Modifying)', () => {
             await handleOrder(order, {
                 type: 'MODIFY_ORDER',
                 payload: {
-                    logistics: {
-                        toLoc: 'Another location, Hong Kong SAR'
-                    }
+                    address: 'Another location, Hong Kong SAR'
                 }
             })
         }
@@ -166,7 +158,7 @@ describe('OrderHandler(Modifying)', () => {
             expect(e).to.be.instanceOf(Error, 'Expect throws an error');
             expect(e.message).to.equal('Cannot modify customer-acknowledged order');
         }
-        expect(order.logistics.toLoc).to.equal('A new location, Hong Kong SAR');
+        expect(order.address).to.equal('A new location, Hong Kong SAR');
     })
 });
 

@@ -26,7 +26,8 @@ export interface IOrder extends Identified, TimeTraced {
     status: OrderStatus;
     customer: Customer;
     products: Product[];
-    arriveTime: number;
+    arriveTime: number | undefined;
+    address: string;
     // logistics: Logistics;
 }
 
