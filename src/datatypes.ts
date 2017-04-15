@@ -23,17 +23,11 @@ export interface Personnel extends Human {
 }
 
 export interface IOrder extends Identified, TimeTraced {
-    type: OrderType;
     status: OrderStatus;
-    // events: OrderEvent[];
     customer: Customer;
-    requirement: ProductRequirement[];
-    products: EndProduct[];
-    logistics: Logistics;
-}
-
-export enum OrderType {
-    Normal
+    products: Product[];
+    arriveTime: number;
+    // logistics: Logistics;
 }
 
 // 订单状态
@@ -65,13 +59,11 @@ export interface Component extends Identified {
 
 export type ProductRequirement = string;
 
-export interface EndProduct extends Identified {
-    serial_number: string;
+export interface Product extends Identified {
+    serialNumber: string;
+    order: IOrder;
+    modelId: number;
     status: ProductStatus;
-}
-
-export enum ProductType {
-    Normal
 }
 
 export enum ProductStatus {
