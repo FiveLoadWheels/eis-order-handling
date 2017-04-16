@@ -11,7 +11,11 @@
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+  "devDependencies": {},
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "lodash-es": "^4.17.4",
+
     "@types/chai": "^3.4.35",
     "@types/lodash": "^4.14.62",
     "@types/lodash-es": "^4.14.5",
@@ -20,9 +24,5 @@
     "mocha": "^3.2.0",
     "source-map-support": "^0.4.14",
     "typescript": "^2.2.1"
-  },
-  "dependencies": {
-    "lodash": "^4.17.4",
-    "lodash-es": "^4.17.4"
   }
 }
