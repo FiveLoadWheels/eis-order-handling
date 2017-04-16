@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "pretest": "npm run build",
-    "test": "mocha ./lib/test"
+    "test": "mocha ./lib/test",
+    "postinstall": "npm run build"
   },
   "author": "",
   "license": "ISC",
