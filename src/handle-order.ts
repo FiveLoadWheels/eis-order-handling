@@ -11,7 +11,7 @@ export type OrderAction =
     { type: 'CUSTOMER_ACK', payload: { resolved: boolean } } |
     { type: 'UPDATE_PRODUCT_PROCESS', payload: null } |
     { type: 'START_DELIVERY', payload: { resolved: boolean } } |
-    { type: 'ORDER_CONFIRM', payload: { arriveTime: number } };
+    { type: 'END_DELIVERY', payload: { arriveTime: number } };
 
 export function handleOrder(order: IOrder, action: OrderAction): IOrder {
     // handle cancelling
@@ -75,14 +75,14 @@ export function handleOrder(order: IOrder, action: OrderAction): IOrder {
     break;
 
     case OrderStatus.DeliveryStarted:
-        if (action.type === 'ORDER_CONFIRM' && action.payload.arriveTime) {
+        if (action.type === 'END_DELIVERY' && action.payload.arriveTime) {
             order.arriveTime = action.payload.arriveTime;
             order.status = OrderStatus.DeliveryFinished;
         }
     break;
 
     case OrderStatus.DeliveryFinished:
-        // if (action.type === 'ORDER_CONFIRM') {
+        // if (action.type === 'END_DELIVERY') {
         //     let userConfirm = action.payload;
         //     if (userConfirm.resolved) {
         //         order.status = OrderStatus.Closed;
