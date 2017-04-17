@@ -14,6 +14,15 @@ function createOrder() {
         status: OrderStatus.Created,
         customer: {
             id: 22,
+            mtime: Date.now(),
+            ctime: Date.now(),
+            lastName: 'Ng',
+            firstName: 'Nick',
+            tel:'000-00000',
+            lastLogin: Date.now(),
+            password: 'PaSsWorD',
+            email: 'example@example.com'
+
         },
         products: [],
         arriveTime: undefined,

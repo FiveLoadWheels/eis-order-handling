@@ -1,4 +1,4 @@
-import * as datatypes from './lib/datatypes';
+import * as datatypes from './src/datatypes';
 
 type _Datatypes = typeof datatypes;
 
