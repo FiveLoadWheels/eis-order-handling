@@ -10,16 +10,29 @@ export interface TimeTraced {
     mtime: number;
 }
 
-export interface Human extends Identified {
-
+export interface Human extends Identified, TimeTraced {
+    firstName: string;
+    lastName: string;
+    lastLogin: number;
+    tel: string;
+    password: string;
 }
 
 export interface Customer extends Human {
-
+    email: string;
 }
 
 export interface Personnel extends Human {
+    email: string | null;
+    role: PersonnelRole;
+}
 
+export enum PersonnelRole {
+    CustomerService = 1,
+    Finanace,
+    Production,
+    Logistics,
+    HumanResource
 }
 
 export interface IOrder extends Identified, TimeTraced {
