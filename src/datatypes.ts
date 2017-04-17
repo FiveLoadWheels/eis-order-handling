@@ -88,3 +88,7 @@ export interface ProductModels extends Identified {
 export interface InventoryRecord {
 
 }
+
+export interface Operation {
+
+}
