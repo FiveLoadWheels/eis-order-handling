@@ -32,7 +32,7 @@ function createOrder() {
     let product0: Product = {
         id: 92,
         serialNumber: '0x000fffabcde',
-        status: ProductStatus.Initialized,
+        status: ProductStatus.Uninitialized,
         modelId: 0,
         oid: 12,
         accessories: [

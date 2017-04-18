@@ -86,6 +86,7 @@ export interface Product extends Identified {
 }
 
 export enum ProductStatus {
+    Uninitialized,
     Initialized = 1, // 已根据订单生成记录
     ComponentEnsured, // 已保障零部件存货足够
     AssemblyCompleted, // 已完成组装

@@ -50,6 +50,11 @@ export function handleOrder(order: IOrder, action: OrderAction): IOrder {
                     // If we have inventories, we can directly skip the manufacturing process.
                     order.status = OrderStatus.ProcessFinished;
                 }
+                else {
+                    order.products.forEach(p => {
+                        p.status = ProductStatus.Initialized;
+                    });
+                }
             }
         };
     break;

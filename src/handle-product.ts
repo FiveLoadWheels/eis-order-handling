@@ -7,6 +7,8 @@ export type ProductAction =
 
 export function handleProduct(product: Product, action: ProductAction) {
     switch (product.status) {
+    case ProductStatus.Uninitialized:
+        throw new Error('Cannot handle uninitialized product.');
     case ProductStatus.Initialized:
         if (action.type === 'UPDATE_ACCESSORY') {
             if (product.accessories.some(acc => acc.quantity < 1)) {
