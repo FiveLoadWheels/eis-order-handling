@@ -103,5 +103,15 @@ export interface InventoryRecord {
 }
 
 export interface Operation {
+    uid: number;
+    ctime: number;
+    action: string;
+    targetType: OperationTarget;
+    targetId: number;
+}
 
+export enum OperationTarget {
+    Order = 1,
+    Product,
+    Accessory
 }
