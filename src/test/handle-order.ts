@@ -92,11 +92,12 @@ describe('OrderHandler(Basic lifecycle)', () => {
         expect(order.status).to.equal(OrderStatus.ProcessFinished);
     });
 
-    it('should state the order as `DeliveryStarted` after logistics process started', async () => {
+    it('should state the order as `DeliveryStarted` after logistics process started (plus the ability to change address)', async () => {
         await handleOrder(order, {
             type: 'START_DELIVERY',
-            payload: { resolved: true }
+            payload: { address: 'A new new place' }
         });
+        expect(order.address).to.equal('A new new place');
         expect(order.status).to.equal(OrderStatus.DeliveryStarted);
     });
         

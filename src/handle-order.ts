@@ -10,7 +10,7 @@ export type OrderAction =
     { type: 'MODIFY_ORDER', payload: IOrder | object } |
     { type: 'CUSTOMER_ACK', payload: { resolved: boolean } } |
     { type: 'UPDATE_PRODUCT_PROCESS', payload: null } |
-    { type: 'START_DELIVERY', payload: { resolved: boolean } } |
+    { type: 'START_DELIVERY', payload: { address?: string } } |
     { type: 'END_DELIVERY', payload: { arriveTime: number } };
 
 export function handleOrder(order: IOrder, action: OrderAction): IOrder {
@@ -74,7 +74,10 @@ export function handleOrder(order: IOrder, action: OrderAction): IOrder {
     } break;
 
     case OrderStatus.ProcessFinished:
-        if (action.type === 'START_DELIVERY' && action.payload.resolved) {
+        if (action.type === 'START_DELIVERY') {
+            if (action.payload.address) {
+                order.address = action.payload.address;
+            }
             order.status = OrderStatus.DeliveryStarted;
         }
     break;
