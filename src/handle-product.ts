@@ -14,6 +14,9 @@ export function handleProduct(product: Product, action: ProductAction) {
                 return false;
             }
             else {
+                product.accessories.forEach(acc => {
+                    acc.quantity -= 1;
+                });
                 product.status = ProductStatus.ComponentEnsured;
                 return true;
             }
