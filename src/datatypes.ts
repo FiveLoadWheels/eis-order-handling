@@ -28,7 +28,7 @@ export interface Personnel extends Human {
 }
 
 export enum PersonnelRole {
-    CustomerService = 1,
+    Sales = 1,
     Finanace,
     Production,
     Logistics,
