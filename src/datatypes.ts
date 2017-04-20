@@ -114,5 +114,8 @@ export interface Operation {
 export enum OperationTarget {
     Order = 1,
     Product,
-    Accessory
+    Accessory,
+    Finance,
+    Personnel,
+    ProductModel
 }
