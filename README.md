@@ -10,3 +10,7 @@ cd eis-order-handling
 npm install
 npm test
 ```
+## Source Files
+
+ - `src/handle-order.ts`, `src/handle-product.ts`: order/product handling process
+ - `src/test/*`: test cases
